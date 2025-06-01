@@ -25,3 +25,15 @@ switch ($routeInfo[0]) {
         echo $handler($vars);
         break;
 }
+
+// use App\Models\Product;
+
+// $allProducts = Product::all(); // كل المنتجات
+// $product = Product::find(1);   // منتج معين
+// $byCat = Product::getByCategory(2); // منتجات كاتيجوري معين
+
+// echo "<pre>";
+// print_r($byCat);
+// echo "</pre>";
+// print_r($product);
+// print_r($byCat);

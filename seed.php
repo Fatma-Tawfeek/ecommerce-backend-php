@@ -23,13 +23,9 @@ $pdo->exec("TRUNCATE TABLE products");
 $pdo->exec("TRUNCATE TABLE categories");
 $pdo->exec("SET FOREIGN_KEY_CHECKS = 1");
 
-// --- Step 1: إدخال الكاتيجوريز (عدا "all") ---
+// --- Step 1: إدخال الكاتيجوريز ---
 $categoryIds = [];
 foreach ($categories as $category) {
-    if (strtolower($category['name']) === 'all') {
-        continue; // تجاهل الكاتيجوري "all"
-    }
-
     $stmt = $pdo->prepare("INSERT INTO categories (name) VALUES (:name)");
     $stmt->execute([':name' => $category['name']]);
     $categoryIds[$category['name']] = $pdo->lastInsertId();
