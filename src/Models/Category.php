@@ -2,17 +2,17 @@
 
 namespace App\Models;
 
+use App\Database\DB;
+use PDO;
+
 class Category
 {
-    private string $name;
-
-    public function __construct(array $data)
+    public static function all(): array
     {
-        $this->name = $data['name'];
-    }
+        $pdo = DB::connect();
+        $stmt = $pdo->query("SELECT * FROM categories");
+        $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    public function getName(): string
-    {
-        return $this->name;
+        return $categories;
     }
 }

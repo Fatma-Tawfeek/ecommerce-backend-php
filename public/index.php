@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Product;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
@@ -28,12 +30,15 @@ switch ($routeInfo[0]) {
 
 // use App\Models\Product;
 
-// $allProducts = Product::all(); // كل المنتجات
+$allProducts = Product::all(); // كل المنتجات
 // $product = Product::find(1);   // منتج معين
 // $byCat = Product::getByCategory(2); // منتجات كاتيجوري معين
 
-// echo "<pre>";
-// print_r($byCat);
-// echo "</pre>";
+// $categories = App\Models\Category::all();
+
+
+echo "<pre>";
+print_r($allProducts);
+echo "</pre>";
 // print_r($product);
 // print_r($byCat);

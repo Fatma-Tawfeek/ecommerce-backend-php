@@ -17,22 +17,17 @@ abstract class AttributeSet
         $this->items = $data['items'] ?? [];
     }
 
-    // Abstract methods
     abstract public function renderValue(string $value): string;
 
-    // Common getters
-    public function getName(): string
+    public function toFrontendFormat(): array
     {
-        return $this->name;
+        return [
+            'name' => $this->name,
+            'type' => $this->type,
+            'values' => $this->getFormattedValues()
+        ];
     }
 
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
-    public function getItems(): array
-    {
-        return $this->items;
-    }
+    // هيتعمل لها override في الـ subclasses
+    abstract protected function getFormattedValues(): array;
 }

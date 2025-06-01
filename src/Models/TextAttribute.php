@@ -11,10 +11,13 @@ class TextAttribute extends AttributeSet
         return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
     }
 
-    public function getAvailableValues(): array
+    protected function getFormattedValues(): array
     {
         return array_map(function ($item) {
-            return $item['value'];
+            return [
+                'label' => $item['displayValue'],
+                'rendered' => $this->renderValue($item['value'])
+            ];
         }, $this->items);
     }
 
