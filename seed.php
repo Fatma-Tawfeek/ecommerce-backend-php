@@ -13,7 +13,7 @@ $data = json_decode($json, true);
 $categories = $data['data']['categories'];
 $products = $data['data']['products'];
 
-// 3. Delete old data (be careful in real projects!)
+// حذف الداتا القديمة
 $pdo->exec("SET FOREIGN_KEY_CHECKS = 0");
 $pdo->exec("TRUNCATE TABLE attribute_product");
 $pdo->exec("TRUNCATE TABLE gallery");
@@ -23,9 +23,13 @@ $pdo->exec("TRUNCATE TABLE products");
 $pdo->exec("TRUNCATE TABLE categories");
 $pdo->exec("SET FOREIGN_KEY_CHECKS = 1");
 
-// --- Step 1: إدخال الكاتيجوريز ---
+// --- Step 1: إدخال الكاتيجوريز (عدا "all") ---
 $categoryIds = [];
 foreach ($categories as $category) {
+    if (strtolower($category['name']) === 'all') {
+        continue; // تجاهل الكاتيجوري "all"
+    }
+
     $stmt = $pdo->prepare("INSERT INTO categories (name) VALUES (:name)");
     $stmt->execute([':name' => $category['name']]);
     $categoryIds[$category['name']] = $pdo->lastInsertId();
@@ -59,16 +63,21 @@ foreach ($products as $product) {
     foreach ($product['attributes'] as $attributeSet) {
         if (!isset($attributeSet['name'])) continue;
 
-        // أدخل الاتربيوت نفسه
-        $stmt = $pdo->prepare("INSERT INTO attributes (name) VALUES (:name)");
-        $stmt->execute([':name' => $attributeSet['name']]);
+        $type = $attributeSet['type'] ?? 'text'; // لو مش موجود نخليها text
+
+        // أدخل الـ attribute مع الـ type
+        $stmt = $pdo->prepare("INSERT INTO attributes (name, type) VALUES (:name, :type)");
+        $stmt->execute([
+            ':name' => $attributeSet['name'],
+            ':type' => $type
+        ]);
         $attributeId = $pdo->lastInsertId();
 
-        // اربطه بالبرودكت
+        // أربطه بالبرودكت
         $stmt = $pdo->prepare("INSERT INTO attribute_product (product_id, attribute_id) VALUES (:product_id, :attribute_id)");
         $stmt->execute([':product_id' => $productId, ':attribute_id' => $attributeId]);
 
-        // أدخل الآيتيمز بتاعته
+        // أدخل الآيتيمز
         if (isset($attributeSet['items'])) {
             foreach ($attributeSet['items'] as $item) {
                 $stmt = $pdo->prepare("
