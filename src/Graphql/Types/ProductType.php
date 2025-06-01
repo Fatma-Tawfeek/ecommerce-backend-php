@@ -1,8 +1,10 @@
 <?php
 
-use GraphQL\GraphQL;
-use GraphQL\Type\Definition\ObjectType;
+namespace App\GraphQL\Types;
+
+use App\GraphQL\Types\AttributeType;
 use GraphQL\Type\Definition\Type;
+use GraphQL\Type\Definition\ObjectType;
 
 class ProductType extends ObjectType
 {
@@ -12,23 +14,19 @@ class ProductType extends ObjectType
             'name' => 'Product',
             'fields' => function () {
                 return [
-                    'id' => Type::nonNull(Type::int()),
+                    'id' => Type::id(),
                     'name' => Type::string(),
-                    'price' => Type::float(),
                     'description' => Type::string(),
                     'brand' => Type::string(),
+                    'price' => Type::float(),
                     'inStock' => Type::boolean(),
-                    'category' => [
-                        'type' => GraphQL::type('Category'),
-                        'resolve' => function ($product) {
-                            return Category::find($product->category_id);
-                        }
-                    ],
+                    'gallery' => Type::listOf(Type::string()),
+                    'category' => Type::string(),
+
                     'attributes' => [
-                        'type' => Type::listOf(GraphQL::type('Attribute')),
+                        'type' => Type::listOf(new AttributeType()),
                         'resolve' => function ($product) {
-                            // هنا بنستخدم العلاقة بين الجدولين
-                            return $product->attributes;
+                            return $product['attributes'] ?? [];
                         }
                     ]
                 ];

@@ -99,4 +99,14 @@ class Order
             throw $e;
         }
     }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'totalPrice' => $this->totalPrice,
+            'itemsNumber' => $this->itemsNumber,
+            'products' => $this->products
+        ];
+    }
 }
