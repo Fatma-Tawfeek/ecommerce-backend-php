@@ -14,14 +14,13 @@ class AttributeType extends ObjectType
             'fields' => [
                 'name' => Type::string(),
                 'type' => Type::string(),
-                'items' => [
+                'values' => [
                     'type' => Type::listOf(Type::nonNull(
                         new ObjectType([
-                            'name' => 'AttributeItem',
+                            'name' => 'AttributeValue',
                             'fields' => [
-                                'id' => Type::id(),
-                                'displayValue' => Type::string(),
-                                'value' => Type::string(),
+                                'label' => Type::string(),
+                                'rendered' => Type::string(),
                             ]
                         ])
                     ))

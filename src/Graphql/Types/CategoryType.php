@@ -2,11 +2,10 @@
 
 namespace App\GraphQL\Types;
 
-use App\GraphQL\Types\AttributeType;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\ObjectType;
 
-class ProductType extends ObjectType
+class CategoryType extends ObjectType
 {
     public function __construct()
     {

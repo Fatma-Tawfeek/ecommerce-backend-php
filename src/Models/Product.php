@@ -10,7 +10,17 @@ class Product
     public static function all(): array
     {
         $pdo = DB::connect();
-        $stmt = $pdo->query("SELECT * FROM products");
+        $stmt = $pdo->query("
+                        SELECT 
+                            id, 
+                            name, 
+                            description, 
+                            brand, 
+                            `in-stock` AS inStock, 
+                            price, 
+                            category_id
+                        FROM products
+                    ");
         $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return array_map(fn($row) => self::loadRelations($pdo, $row), $products);
@@ -42,6 +52,12 @@ class Product
 
     private static function loadRelations(PDO $pdo, array $product): array
     {
+
+        // تحميل التصنيف
+        $stmt = $pdo->prepare("SELECT name FROM categories WHERE id = ?");
+        $stmt->execute([$product['category_id']]);
+        $product['category'] = $stmt->fetchColumn();
+
         // تحميل الصور (gallery)
         $stmt = $pdo->prepare("SELECT url FROM gallery WHERE product_id = ?");
         $stmt->execute([$product['id']]);
@@ -60,7 +76,7 @@ class Product
         // تحميل الـ items لكل attribute، وتحويلها لكائن AttributeSet (Text/Swatch)
         $finalAttributes = [];
         foreach ($attributes as $attribute) {
-            $stmtItems = $pdo->prepare("SELECT id, `display-value`, `value` FROM items WHERE attribute_id = ?");
+            $stmtItems = $pdo->prepare("SELECT id, `display-value` AS displayValue, `value` FROM items WHERE attribute_id = ?");
             $stmtItems->execute([$attribute['id']]);
             $items = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
 

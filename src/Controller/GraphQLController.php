@@ -7,6 +7,7 @@ use App\GraphQL\Resolvers\ProductResolver;
 use App\GraphQL\Resolvers\OrderResolver;
 use App\GraphQL\Types\ProductType;
 use App\GraphQL\Types\OrderType;
+use GraphQL\Error\DebugFlag;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Schema;
@@ -14,28 +15,29 @@ use GraphQL\Type\SchemaConfig;
 use RuntimeException;
 use Throwable;
 
-class GraphqLController
+class GraphQLController
 {
     static public function handle()
     {
+
         try {
             // Query Type
             $queryType = new ObjectType([
                 'name' => 'Query',
                 'fields' => [
                     'products' => [
-                        'type' => Type::listOf(new ProductType()),
+                        'type' => Type::listOf(\App\GraphQL\Types\TypeRegistry::product()),
                         'resolve' => [ProductResolver::class, 'getAll']
                     ],
                     'product' => [
-                        'type' => new ProductType(),
+                        'type' =>  \App\GraphQL\Types\TypeRegistry::product(),
                         'args' => [
                             'id' => Type::nonNull(Type::int())
                         ],
                         'resolve' => [ProductResolver::class, 'getById']
                     ],
                     'categories' => [
-                        'type' => Type::listOf(Type::string()),
+                        'type' => Type::listOf(\App\GraphQL\Types\TypeRegistry::category()),
                         'resolve' => [CategoryResolver::class, 'getAll']
                     ]
                 ]
@@ -46,7 +48,7 @@ class GraphqLController
                 'name' => 'Mutation',
                 'fields' => [
                     'createOrder' => [
-                        'type' => new OrderType(),
+                        'type' =>  \App\GraphQL\Types\TypeRegistry::order(),
                         'args' => [
                             'products' => Type::nonNull(Type::listOf(
                                 new \GraphQL\Type\Definition\InputObjectType([
@@ -90,15 +92,16 @@ class GraphqLController
 
             $rootValue = [];
             $result = \GraphQL\GraphQL::executeQuery($schema, $query, $rootValue, null, $variableValues);
-            $output = $result->toArray();
+            // $output = $result->toArray();
+            $output = $result->toArray(DebugFlag::INCLUDE_DEBUG_MESSAGE | DebugFlag::INCLUDE_TRACE);
         } catch (Throwable $e) {
             $output = [
                 'error' => [
                     'message' => $e->getMessage(),
                 ],
             ];
+            file_put_contents(__DIR__ . '/../../error_log.txt', $e->getMessage());
         }
-
         header('Content-Type: application/json; charset=UTF-8');
         echo json_encode($output);
     }

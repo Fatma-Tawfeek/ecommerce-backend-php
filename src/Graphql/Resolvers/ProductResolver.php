@@ -3,6 +3,7 @@
 namespace App\GraphQL\Resolvers;
 
 use App\Models\Product;
+use Throwable;
 
 class ProductResolver
 {

@@ -15,7 +15,7 @@ class TextAttribute extends AttributeSet
     {
         return array_map(function ($item) {
             return [
-                'label' => $item['displayValue'],
+                'label' => $item['displayValue'] ?? $item['value'],
                 'rendered' => $this->renderValue($item['value'])
             ];
         }, $this->items);

@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\Types;
 
-use App\GraphQL\Types\AttributeType;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\ObjectType;
 
@@ -24,11 +23,17 @@ class ProductType extends ObjectType
                     'category' => Type::string(),
 
                     'attributes' => [
-                        'type' => Type::listOf(new AttributeType()),
+                        'type' => Type::listOf(TypeRegistry::attribute()),
                         'resolve' => function ($product) {
-                            return $product['attributes'] ?? [];
+                            return array_map(function ($attr) {
+                                if (is_object($attr) && method_exists($attr, 'toFrontendFormat')) {
+                                    return $attr->toFrontendFormat();
+                                }
+                                return null;
+                            }, $product['attributes'] ?? []);
                         }
                     ]
+
                 ];
             }
         ]);
