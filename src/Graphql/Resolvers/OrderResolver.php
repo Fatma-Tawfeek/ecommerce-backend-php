@@ -8,15 +8,21 @@ class OrderResolver
 {
     public static function create($root, array $args): array
     {
-        // الـ args لازم تحتوي على products: [{ productId: X }]
-        $orderData = $args['input'];
-        $order = new Order();
+        $order = new \App\Models\Order();
 
-        foreach ($orderData['products'] as $product) {
-            $order->addProduct($product['productId'], $product['selectedAttributes'] ?? []);
+        foreach ($args['products'] as $productData) {
+            $productId = $productData['productId'];
+            $attributes = [];
+
+            foreach ($productData['selectedAttributes'] ?? [] as $attr) {
+                $attributes[$attr['name']] = $attr['value'];
+            }
+
+            $order->addProduct($productId, $attributes);
         }
 
-        $order->save(); // دي بتحسب السعر وبتحفظ في الجدولين orders و order_product
+        $order->calculateTotalPrice();
+        $order->save();
 
         return $order->toArray();
     }

@@ -25,4 +25,9 @@ class TypeRegistry
     {
         return self::$types['order'] ??= new OrderType();
     }
+
+    public static function orderProduct(): OrderProductType
+    {
+        return self::$types['orderProduct'] ??= new OrderProductType();
+    }
 }

@@ -111,7 +111,14 @@ class Order
             'id' => $this->id,
             'totalPrice' => $this->totalPrice,
             'itemsNumber' => $this->itemsNumber,
-            'products' => $this->products
+            'products' => array_map(function ($product) {
+                return [
+                    'productId' => $product['productId'],
+                    'selectedAttributes' => array_map(function ($name, $value) {
+                        return ['name' => $name, 'value' => $value];
+                    }, array_keys($product['selectedAttributes']), $product['selectedAttributes'])
+                ];
+            }, $this->products)
         ];
     }
 }

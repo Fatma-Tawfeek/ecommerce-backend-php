@@ -5,9 +5,6 @@ namespace App\Controller;
 use App\GraphQL\Resolvers\CategoryResolver;
 use App\GraphQL\Resolvers\ProductResolver;
 use App\GraphQL\Resolvers\OrderResolver;
-use App\GraphQL\Types\ProductType;
-use App\GraphQL\Types\OrderType;
-use GraphQL\Error\DebugFlag;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Schema;
@@ -99,15 +96,13 @@ class GraphQLController
 
             $rootValue = [];
             $result = \GraphQL\GraphQL::executeQuery($schema, $query, $rootValue, null, $variableValues);
-            // $output = $result->toArray();
-            $output = $result->toArray(DebugFlag::INCLUDE_DEBUG_MESSAGE | DebugFlag::INCLUDE_TRACE);
+            $output = $result->toArray();
         } catch (Throwable $e) {
             $output = [
                 'error' => [
                     'message' => $e->getMessage(),
                 ],
             ];
-            file_put_contents(__DIR__ . '/../../error_log.txt', $e->getMessage());
         }
         header('Content-Type: application/json; charset=UTF-8');
         echo json_encode($output);

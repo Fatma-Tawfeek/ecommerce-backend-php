@@ -15,7 +15,9 @@ class OrderType extends ObjectType
                 'id' => Type::id(),
                 'totalPrice' => Type::float(),
                 'itemsNumber' => Type::int(),
-                'products' => Type::listOf(Type::string())
+                'products' => [
+                    'type' => Type::listOf(TypeRegistry::orderProduct()) // استخدمي تايب رجستري لو عندك
+                ],
             ]
         ]);
     }
