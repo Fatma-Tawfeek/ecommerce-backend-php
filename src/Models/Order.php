@@ -42,9 +42,13 @@ class Order
         $productIds = array_map(fn($p) => $p['productId'], $this->products);
         $placeholders = implode(',', array_fill(0, count($productIds), '?'));
 
-        $stmt = $pdo->prepare("SELECT id, price FROM products WHERE id IN ($placeholders)");
+        $stmt = $pdo->prepare("
+        SELECT product_id, amount
+        FROM prices
+        WHERE product_id IN ($placeholders)
+    ");
         $stmt->execute($productIds);
-        $prices = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+        $prices = $stmt->fetchAll(PDO::FETCH_KEY_PAIR); // [product_id => amount]
 
         $total = 0;
         foreach ($productIds as $id) {
@@ -53,6 +57,7 @@ class Order
 
         $this->totalPrice = $total;
     }
+
 
     public function save(): void
     {

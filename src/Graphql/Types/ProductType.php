@@ -17,10 +17,15 @@ class ProductType extends ObjectType
                     'name' => Type::string(),
                     'description' => Type::string(),
                     'brand' => Type::string(),
-                    'price' => Type::float(),
                     'inStock' => Type::boolean(),
                     'gallery' => Type::listOf(Type::string()),
                     'category' => Type::string(),
+                    'prices' => [
+                        'type' => Type::listOf(new PriceType()),
+                        'resolve' => function ($product) {
+                            return $product['prices'] ?? [];
+                        }
+                    ],
 
                     'attributes' => [
                         'type' => Type::listOf(TypeRegistry::attribute()),

@@ -17,7 +17,6 @@ class Product
                             description, 
                             brand, 
                             `in-stock` AS inStock, 
-                            price, 
                             category_id
                         FROM products
                     ");
@@ -87,6 +86,18 @@ class Product
         }
 
         $product['attributes'] = $finalAttributes;
+
+        // ✅ تحميل الأسعار من جدول prices + currencies
+        $stmt = $pdo->prepare("
+        SELECT p.amount, c.label, c.symbol
+        FROM prices p
+        JOIN currencies c ON p.currency_id = c.id
+        WHERE p.product_id = ?
+    ");
+        $stmt->execute([$product['id']]);
+        $prices = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $product['prices'] = $prices;
 
         return $product;
     }

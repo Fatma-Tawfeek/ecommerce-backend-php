@@ -19,6 +19,6 @@ class ProductResolver
 
     public static function getByCategory($root, array $args): array
     {
-        return Product::getByCategory($args['category_id']);
+        return Product::getByCategory($args['categoryId']);
     }
 }

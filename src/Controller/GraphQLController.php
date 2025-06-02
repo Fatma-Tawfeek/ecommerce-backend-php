@@ -36,6 +36,13 @@ class GraphQLController
                         ],
                         'resolve' => [ProductResolver::class, 'getById']
                     ],
+                    'productsByCategory' => [
+                        'type' => Type::listOf(\App\GraphQL\Types\TypeRegistry::product()),
+                        'args' => [
+                            'categoryId' => Type::nonNull(Type::int())
+                        ],
+                        'resolve' => [ProductResolver::class, 'getByCategory']
+                    ],
                     'categories' => [
                         'type' => Type::listOf(\App\GraphQL\Types\TypeRegistry::category()),
                         'resolve' => [CategoryResolver::class, 'getAll']
