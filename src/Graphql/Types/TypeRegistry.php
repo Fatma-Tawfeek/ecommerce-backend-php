@@ -16,6 +16,11 @@ class TypeRegistry
         return self::$types['category'] ??= new CategoryType();
     }
 
+    public static function categoryProducts(): CategoryProductsType
+    {
+        return self::$types['categoryProducts'] ??= new CategoryProductsType();
+    }
+
     public static function attribute(): AttributeType
     {
         return self::$types['attribute'] ??= new AttributeType();

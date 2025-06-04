@@ -42,12 +42,24 @@ class Product
     public static function getByCategory(int $categoryId): array
     {
         $pdo = DB::connect();
+
+        // Get category name
+        $stmt = $pdo->prepare("SELECT name FROM categories WHERE id = ?");
+        $stmt->execute([$categoryId]);
+        $categoryName = $stmt->fetchColumn();
+
+        // Get products
         $stmt = $pdo->prepare("SELECT * FROM products WHERE category_id = ?");
         $stmt->execute([$categoryId]);
         $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $products = array_map(fn($row) => self::loadRelations($pdo, $row), $products);
 
-        return array_map(fn($row) => self::loadRelations($pdo, $row), $products);
+        return [
+            'categoryName' => $categoryName,
+            'products' => $products
+        ];
     }
+
 
     private static function loadRelations(PDO $pdo, array $product): array
     {
