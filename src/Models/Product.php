@@ -49,7 +49,15 @@ class Product
         $categoryName = $stmt->fetchColumn();
 
         // Get products
-        $stmt = $pdo->prepare("SELECT * FROM products WHERE category_id = ?");
+        $stmt = $pdo->prepare("SELECT   
+                            id, 
+                            name, 
+                            description, 
+                            brand, 
+                            `in-stock` AS inStock, 
+                            category_id
+                            FROM products
+                            WHERE category_id = ?");
         $stmt->execute([$categoryId]);
         $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $products = array_map(fn($row) => self::loadRelations($pdo, $row), $products);
