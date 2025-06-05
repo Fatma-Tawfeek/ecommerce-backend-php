@@ -6,10 +6,20 @@ use App\Models\AttributeSet;
 
 class SwatchAttribute extends AttributeSet
 {
+    private function getColorCode(string $value): string
+    {
+        foreach ($this->items as $item) {
+            if ((string)$item['value'] === (string)$value) {
+                return $item['value'];
+            }
+        }
+        return '#000000';
+    }
+
     public function renderValue(string $value): string
     {
         $colorCode = $this->getColorCode($value);
-        return "<span class='color-swatch' style='background-color: {$colorCode};'></span>";
+        return "<span class='px-3 py-1' style='background-color: {$colorCode};'></span>";
     }
 
     protected function getFormattedValues(): array
@@ -20,15 +30,5 @@ class SwatchAttribute extends AttributeSet
                 'rendered' => $this->renderValue($item['value'])
             ];
         }, $this->items);
-    }
-
-    private function getColorCode(string $value): string
-    {
-        foreach ($this->items as $item) {
-            if ($item['id'] === $value || $item['displayValue'] === $value) {
-                return $item['value'];
-            }
-        }
-        return '#000000';
     }
 }

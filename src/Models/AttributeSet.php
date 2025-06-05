@@ -18,6 +18,7 @@ abstract class AttributeSet
     }
 
     abstract public function renderValue(string $value): string;
+    abstract protected function getFormattedValues(): array;
 
     public function toFrontendFormat(): array
     {
@@ -27,7 +28,4 @@ abstract class AttributeSet
             'values' => $this->getFormattedValues()
         ];
     }
-
-    // هيتعمل لها override في الـ subclasses
-    abstract protected function getFormattedValues(): array;
 }

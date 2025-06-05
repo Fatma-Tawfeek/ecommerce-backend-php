@@ -57,7 +57,7 @@ foreach ($products as $product) {
     ");
     $stmt->execute([
         ':name' => $product['name'],
-        ':description' => strip_tags($product['description']),
+        ':description' => $product['description'],
         ':brand' => $product['brand'],
         ':inStock' => $product['inStock'] ? 1 : 0,
         ':category_id' => $categoryIds[$product['category']] ?? null

@@ -28,7 +28,14 @@ class Product
     public static function find(int $id): ?array
     {
         $pdo = DB::connect();
-        $stmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
+        $stmt = $pdo->prepare("SELECT 
+                            id, 
+                            name, 
+                            description, 
+                            brand, 
+                            `in-stock` AS inStock,
+                            category_id
+         FROM products WHERE id = ?");
         $stmt->execute([$id]);
         $product = $stmt->fetch(PDO::FETCH_ASSOC);
 

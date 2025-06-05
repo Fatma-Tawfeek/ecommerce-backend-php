@@ -20,14 +20,4 @@ class TextAttribute extends AttributeSet
             ];
         }, $this->items);
     }
-
-    public function getDisplayValue(string $value): string
-    {
-        foreach ($this->items as $item) {
-            if ($item['value'] === $value) {
-                return $item['displayValue'];
-            }
-        }
-        return $value;
-    }
 }
