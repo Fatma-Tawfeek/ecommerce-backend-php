@@ -8,7 +8,7 @@ class TextAttribute extends AttributeSet
 {
     public function renderValue(string $value): string
     {
-        return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+        return "<span className='px-3 py-2'>{$value}</span>";
     }
 
     protected function getFormattedValues(): array
