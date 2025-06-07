@@ -60,6 +60,7 @@ class GraphQLController
                                     'name' => 'OrderProductInput',
                                     'fields' => [
                                         'productId' => Type::nonNull(Type::int()),
+                                        'quantity' => Type::nonNull(Type::int()),
                                         'selectedAttributes' => Type::listOf(
                                             new \GraphQL\Type\Definition\InputObjectType([
                                                 'name' => 'SelectedAttributeInput',
@@ -72,6 +73,7 @@ class GraphQLController
                                     ]
                                 ])
                             ))
+
                         ],
                         'resolve' => [OrderResolver::class, 'create']
                     ]

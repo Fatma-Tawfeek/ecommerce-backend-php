@@ -21,14 +21,16 @@ class Order
         $this->products = $data['products'] ?? [];
     }
 
-    public function addProduct(int $productId, array $selectedAttributes = []): void
+    public function addProduct(int $productId, int $quantity = 1, array $selectedAttributes = []): void
     {
         $this->products[] = [
             'productId' => $productId,
-            'selectedAttributes' => $selectedAttributes
+            'selectedAttributes' => $selectedAttributes,
+            'quantity' => $quantity
         ];
-        $this->itemsNumber = count($this->products);
+        $this->itemsNumber += $quantity;
     }
+
 
     public function calculateTotalPrice(): void
     {
@@ -75,19 +77,20 @@ class Order
             $this->id = $pdo->lastInsertId();
 
             // 2. Save products in order_product
-            $stmt = $pdo->prepare("INSERT INTO order_product (order_id, product_id) VALUES (:order_id, :product_id)");
+            $stmt = $pdo->prepare("INSERT INTO order_product (order_id, product_id, quantity) VALUES (:order_id, :product_id, :quantity)");
             $stmtAttr = $pdo->prepare("INSERT INTO order_product_attributes (order_id, product_id, attribute_name, selected_value) VALUES (:order_id, :product_id, :name, :value)");
 
             foreach ($this->products as $product) {
                 $productId = $product['productId'];
+                $quantity = $product['quantity'];
                 $attributes = $product['selectedAttributes'] ?? [];
 
                 $stmt->execute([
                     ':order_id' => $this->id,
-                    ':product_id' => $productId
+                    ':product_id' => $productId,
+                    ':quantity' => $quantity
                 ]);
 
-                // 3. Save attributes
                 foreach ($attributes as $name => $value) {
                     $stmtAttr->execute([
                         ':order_id' => $this->id,
@@ -105,6 +108,8 @@ class Order
         }
     }
 
+
+
     public function toArray(): array
     {
         return [
@@ -114,9 +119,12 @@ class Order
             'products' => array_map(function ($product) {
                 return [
                     'productId' => $product['productId'],
-                    'selectedAttributes' => array_map(function ($name, $value) {
-                        return ['name' => $name, 'value' => $value];
-                    }, array_keys($product['selectedAttributes']), $product['selectedAttributes'])
+                    'quantity' => $product['quantity'],
+                    'selectedAttributes' => array_map(
+                        fn($name, $value) => ['name' => $name, 'value' => $value],
+                        array_keys($product['selectedAttributes']),
+                        $product['selectedAttributes']
+                    )
                 ];
             }, $this->products)
         ];

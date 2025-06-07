@@ -13,6 +13,7 @@ class OrderProductType extends ObjectType
             'name' => 'OrderProduct',
             'fields' => [
                 'productId' => Type::int(),
+                'quantity' => Type::int(),
                 'selectedAttributes' => Type::listOf(
                     new ObjectType([
                         'name' => 'OrderSelectedAttribute',

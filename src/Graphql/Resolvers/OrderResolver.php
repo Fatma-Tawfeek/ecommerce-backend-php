@@ -8,17 +8,18 @@ class OrderResolver
 {
     public static function create($root, array $args): array
     {
-        $order = new \App\Models\Order();
+        $order = new Order();
 
         foreach ($args['products'] as $productData) {
             $productId = $productData['productId'];
+            $quantity = $productData['quantity'] ?? 1;
             $attributes = [];
 
             foreach ($productData['selectedAttributes'] ?? [] as $attr) {
                 $attributes[$attr['name']] = $attr['value'];
             }
 
-            $order->addProduct($productId, $attributes);
+            $order->addProduct($productId, $quantity, $attributes);
         }
 
         $order->calculateTotalPrice();
