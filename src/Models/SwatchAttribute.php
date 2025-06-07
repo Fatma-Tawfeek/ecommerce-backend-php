@@ -19,7 +19,7 @@ class SwatchAttribute extends AttributeSet
     public function renderValue(string $value): string
     {
         $colorCode = $this->getColorCode($value);
-        return "<span className='px-3 py-3 block' style='background-color: {$colorCode}'></span>";
+        return "<span style='background-color: {$colorCode}; width: 100%; height: 100%;display: inline-block'></span>";
     }
 
     protected function getFormattedValues(): array

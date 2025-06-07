@@ -8,7 +8,7 @@ class TextAttribute extends AttributeSet
 {
     public function renderValue(string $value): string
     {
-        return "<span className='px-3 py-2'>{$value}</span>";
+        return "<span style='padding-inline: 8px'>{$value}</span>";
     }
 
     protected function getFormattedValues(): array
