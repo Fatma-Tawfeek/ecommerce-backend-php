@@ -14,7 +14,8 @@ COPY . /var/www/html/
 WORKDIR /var/www/html
 
 # ثبّت الـ dependencies
-# RUN composer install
+RUN composer install --no-dev --optimize-autoloader
+
 
 # إعداد الصلاحيات
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
