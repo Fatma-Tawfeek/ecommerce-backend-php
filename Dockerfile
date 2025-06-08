@@ -19,4 +19,5 @@ COPY . .
 # تثبيت الـ dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-CMD ["php", "public/index.php"]
+# CMD ["php", "public/index.php"]
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
