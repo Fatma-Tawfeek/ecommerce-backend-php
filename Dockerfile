@@ -10,7 +10,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     zip \
     libzip-dev \
-    && docker-php-ext-install zip
+    && docker-php-ext-install zip \
+    && docker-php-ext-install pdo pdo_mysql
 
 # تفعيل mod_rewrite (مهم عشان .htaccess)
 RUN a2enmod rewrite
