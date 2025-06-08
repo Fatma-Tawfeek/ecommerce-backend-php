@@ -27,8 +27,3 @@ switch ($routeInfo[0]) {
         echo $handler($vars);
         break;
 }
-
-$products = Product::all();
-echo "<pre>";
-var_dump($products);
-echo "</pre>";
