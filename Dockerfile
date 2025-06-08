@@ -25,7 +25,7 @@ COPY . /var/www/html
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # تثبيت الباكدجات بدون dev
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader && composer dump-autoload --optimize
 
 # فتح البورت 80
 EXPOSE 80

@@ -1,7 +1,5 @@
 <?php
 
-use App\GraphQL\Resolvers\ProductResolver;
-
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
@@ -27,9 +25,3 @@ switch ($routeInfo[0]) {
         echo $handler($vars);
         break;
 }
-
-// $category = ProductResolver::getByCategory(null, ['categoryId' => 2]);
-
-// echo '<pre>';
-// print_r($category);
-// echo '</pre>';
