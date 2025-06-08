@@ -4,13 +4,15 @@ namespace App\Database;
 
 use PDO;
 
-class DB {
-    public static function connect(): PDO {
+class DB
+{
+    public static function connect(): PDO
+    {
         $config = require __DIR__ . '/../Config/config.php';
         $db = $config['db'];
 
         $pdo = new PDO(
-            "mysql:host={$db['host']};dbname={$db['name']};charset=utf8",
+            "mysql:host={$db['host']};port={$db['port']};dbname={$db['name']};charset=utf8",
             $db['user'],
             $db['pass']
         );
@@ -20,4 +22,3 @@ class DB {
         return $pdo;
     }
 }
-

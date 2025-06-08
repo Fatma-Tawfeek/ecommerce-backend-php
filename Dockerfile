@@ -22,6 +22,9 @@ RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available
 # نسخ مشروعك للكونتينر
 COPY . /var/www/html
 
+# نسخ ملف .env للكونتينر
+COPY .env /var/www/html/.env
+
 # نسخ Composer من صورة composer الرسمية
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
