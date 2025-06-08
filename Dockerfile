@@ -1,33 +1,22 @@
-# استخدم PHP 8.2 مع Apache
-FROM php:8.2-apache
+FROM php:8.2-cli
 
-# فعل mod_rewrite
-RUN a2enmod rewrite
+WORKDIR /var/www/html
 
-# نسخ Composer
+# تثبيت الأدوات اللي محتاجاها
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    zip \
+    libzip-dev \
+    && docker-php-ext-install zip
+
+# نسخة Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # نسخ ملفات المشروع
-COPY . /var/www/html/
+COPY . .
 
-# إعداد مجلد العمل
-WORKDIR /var/www/html
-
-# ثبّت الـ dependencies
+# تثبيت الـ dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-
-# إعداد الصلاحيات
-RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
-
-# إعداد الـ Apache ليشتغل من public/
-RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /etc/apache2/sites-available/000-default.conf
-
-# ✨ أهم تعديل هنا:
-# السماح بقراءة .htaccess من الجذر
-RUN echo '<Directory /var/www/html/public>\n\
-    AllowOverride All\n\
-</Directory>' >> /etc/apache2/apache2.conf
-
-# تشغيل Apache
-CMD ["apache2-foreground"]
+CMD ["php", "public/index.php"]
