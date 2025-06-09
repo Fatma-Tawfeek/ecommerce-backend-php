@@ -13,7 +13,7 @@ class CategoryType extends ObjectType
             'name' => 'Category',
             'fields' => function () {
                 return [
-                    'id' => Type::id(),
+                    'id' => Type::string(),
                     'name' => Type::string(),
                 ];
             }
