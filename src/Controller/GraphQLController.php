@@ -36,7 +36,7 @@ class GraphQLController
                     'productsByCategory' => [
                         'type' =>  \App\GraphQL\Types\TypeRegistry::categoryProducts(),
                         'args' => [
-                            'categoryId' => Type::nonNull(Type::int())
+                            'categoryId' => Type::nonNull(Type::string())
                         ],
                         'resolve' => [ProductResolver::class, 'getByCategory']
                     ],
