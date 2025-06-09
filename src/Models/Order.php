@@ -11,7 +11,6 @@ class Order
     private float $totalPrice;
     private int $itemsNumber;
     private array $products;
-    // كل عنصر: ['productId' => int, 'selectedAttributes' => [name => value]]
 
     public function __construct(array $data = [])
     {
@@ -50,7 +49,7 @@ class Order
         WHERE product_id IN ($placeholders)
     ");
         $stmt->execute($productIds);
-        $prices = $stmt->fetchAll(PDO::FETCH_KEY_PAIR); // [product_id => amount]
+        $prices = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
 
         $total = 0;
         foreach ($productIds as $id) {

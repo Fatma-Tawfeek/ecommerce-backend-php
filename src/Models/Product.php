@@ -79,17 +79,17 @@ class Product
     private static function loadRelations(PDO $pdo, array $product): array
     {
 
-        // تحميل التصنيف
+        // category 
         $stmt = $pdo->prepare("SELECT name FROM categories WHERE id = ?");
         $stmt->execute([$product['category_id']]);
         $product['category'] = $stmt->fetchColumn();
 
-        // تحميل الصور (gallery)
+        // gallery
         $stmt = $pdo->prepare("SELECT url FROM gallery WHERE product_id = ?");
         $stmt->execute([$product['id']]);
         $product['gallery'] = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-        // تحميل الـ attributes
+        // attributes
         $stmt = $pdo->prepare("
         SELECT a.id, a.name, a.type
         FROM attributes a
@@ -99,7 +99,7 @@ class Product
         $stmt->execute([$product['id']]);
         $attributes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // تحميل الـ items لكل attribute، وتحويلها لكائن AttributeSet (Text/Swatch)
+        // items
         $finalAttributes = [];
         foreach ($attributes as $attribute) {
             $stmtItems = $pdo->prepare("SELECT id, `display-value` AS displayValue, `value` FROM items WHERE attribute_id = ?");
@@ -108,13 +108,13 @@ class Product
 
             $attribute['items'] = $items;
 
-            // استخدمي الفاكتوري هنا (حتى لو جوّا Product class دلوقتي)
+            // make attribute object
             $finalAttributes[] = self::makeAttributeObject($attribute);
         }
 
         $product['attributes'] = $finalAttributes;
 
-        // ✅ تحميل الأسعار من جدول prices + currencies
+        // prices
         $stmt = $pdo->prepare("
         SELECT p.amount, c.label, c.symbol
         FROM prices p

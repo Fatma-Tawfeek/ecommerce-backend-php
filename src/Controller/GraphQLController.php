@@ -80,14 +80,14 @@ class GraphQLController
                 ]
             ]);
 
-            // إعداد السكيمة
+            // Schema
             $schema = new Schema(
                 (new SchemaConfig())
                     ->setQuery($queryType)
                     ->setMutation($mutationType)
             );
 
-            // قراءة الإنتربت
+            // Input
             $rawInput = file_get_contents('php://input');
             if ($rawInput === false) {
                 throw new RuntimeException('Failed to get php://input');

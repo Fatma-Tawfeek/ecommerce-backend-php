@@ -1,10 +1,10 @@
-# استخدمي نسخة PHP مدمجة مع Apache
+# use an official PHP runtime as a parent image
 FROM php:8.2-apache
 
-# إعداد المسار الرئيسي داخل الكونتينر
+# Set working directory
 WORKDIR /var/www/html
 
-# تثبيت الأدوات المطلوبة
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -13,26 +13,26 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install zip \
     && docker-php-ext-install pdo pdo_mysql
 
-# تفعيل mod_rewrite (مهم عشان .htaccess)
+# enable mod_rewrite
 RUN a2enmod rewrite
 
-# تعديل ملف إعدادات Apache عشان يوجه لـ public
+# set document root
 RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
 
-# نسخ مشروعك للكونتينر
+# copy source files
 COPY . /var/www/html
 
-# نسخ ملف .env للكونتينر
+# copy .env
 COPY .env /var/www/html/.env
 
-# نسخ Composer من صورة composer الرسمية
+# copy composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# تثبيت الباكدجات بدون dev
+# install dependencies
 RUN composer install --no-dev --optimize-autoloader && composer dump-autoload --optimize
 
-# فتح البورت 80
+# expose port
 EXPOSE 80
 
-# بدء Apache
+# run apache
 CMD ["apache2-foreground"]
