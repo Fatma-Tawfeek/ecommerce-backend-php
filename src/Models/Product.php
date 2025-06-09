@@ -46,7 +46,7 @@ class Product
         return self::loadRelations($pdo, $product);
     }
 
-    public static function getByCategory(int $categoryId): array
+    public static function getByCategory(string $categoryId): array
     {
         $pdo = DB::connect();
 
